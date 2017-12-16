@@ -1,0 +1,11 @@
+if Etc.getlogin == "jenkins" then
+    cpus = Etc.nproce ssors - 1
+    # Get total memory by calling "free" command and parsing output
+    total_memory = %x(free -m).split(" ")[7].to_i
+    memory = total_memory - 1024
+    # Use rsync for syncing
+    config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
+  else
+    memory = 2024
+    cpus = 2
+  end
