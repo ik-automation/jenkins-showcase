@@ -10,7 +10,7 @@
 
     <packaging>pom</packaging>
 
-    <name>Jenkin Showcase Build</name>
+    <name>Jenkins Showcase Build</name>
 
     <modules>
         <module>project-api</module>
@@ -28,7 +28,7 @@
         <!--TODO update to version 5-->
         <junit.version>4.12</junit.version>
         <!--spring dependecies-->
-        <spring.boot.version>1.5.9</spring.boot.version>
+        <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <!--logging-->
         <slf4j.version>1.7.25</slf4j.version>
@@ -59,7 +59,7 @@
     </profiles>
 
     <dependencyManagement>
-       <!-- No shared dependencies -->
+        <!-- No shared dependencies -->
     </dependencyManagement>
 
     <dependencies>
@@ -137,7 +137,7 @@
                                         </message>
                                     </bannedPlugins>
                                     <bannedDependencies>
-                                    <!-- ban dependencies -->
+                                        <!-- ban dependencies -->
                                     </bannedDependencies>
                                     <requireMavenVersion>
                                         <version>3.0.0</version>

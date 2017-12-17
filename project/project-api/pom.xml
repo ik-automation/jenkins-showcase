@@ -16,7 +16,7 @@
 
     <properties>
         <springfox-version>2.6.1</springfox-version>
-        <spring.boot.version>1.5.9</spring.boot.version>
+        <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
         <!--<main.basedir>${basedir}/../..</main.basedir>-->
     </properties>
 
@@ -29,18 +29,18 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-dependencies</artifactId>-->
+            <!--<version>${spring.boot.version}</version>-->
+            <!--<type>pom</type>-->
+            <!--<scope>import</scope>-->
+            <!--</dependency>-->
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-         <dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
@@ -48,6 +48,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.pragmatists</groupId>
+            <artifactId>JUnitParams</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
         </dependency>
         <!--test-->
         <dependency>
@@ -64,7 +70,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>yakuramori.Application</mainClass>
+                    <mainClass>yakuramori.api.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>

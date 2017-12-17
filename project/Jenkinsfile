@@ -1,17 +1,17 @@
 #!groovy
 
 pipeline {
-   agent any
+    agent any
 
-   stages {
+    stages {
         stage('Pull Resources') {
             steps {
-              sh "export FOLDER=\$(pwd)"
-              sh '''
+                sh "export FOLDER=\$(pwd)"
+                sh '''
                  echo "Pull local resources from /vagrant/project folder into current folder ${FOLDER}"
                  cp -a /vagrant/project .
                  '''
-              sh 'ls -la project'
+                sh 'ls -la project'
             }
         }
         stage('Compile Stage') {
@@ -31,12 +31,12 @@ pipeline {
             parallel {
                 stage('Unit Tests') {
                     steps {
-                       sh 'echo UNIT TESTS'
+                        sh 'echo UNIT TESTS'
                     }
                 }
                 stage('Mutation Tests') {
                     steps {
-                       sh 'echo UNIT TESTS'
+                        sh 'echo UNIT TESTS'
                     }
                 }
             }
@@ -74,12 +74,12 @@ pipeline {
                 // restart docker
                 // deploy to local docker
 
-               sh "export FOLDER=\$(pwd)"
-               sh '''
+                sh "export FOLDER=\$(pwd)"
+                sh '''
                    echo "Clean folder ${FOLDER}/project"
                    rm -rf project
                   '''
-               sh 'ls -la'
+                sh 'ls -la'
             }
         }
         stage('Performace tests') {
@@ -88,7 +88,7 @@ pipeline {
             }
             post {
                 always {
-                   sh 'echo Performace tests OK'
+                    sh 'echo Performace tests OK'
                 }
             }
         }
@@ -104,14 +104,14 @@ pipeline {
                 // just a playcholder
             }
         }
-   }
+    }
 
-   post {
-      success {
-          echo 'SUCCESSS'
-      }
-      failure {
-          echo 'FAILURE'
-      }
-   }
+    post {
+        success {
+            echo 'SUCCESSS'
+        }
+        failure {
+            echo 'FAILURE'
+        }
+    }
 }
