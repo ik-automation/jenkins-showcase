@@ -12,7 +12,7 @@ Gitignore
 
 Vagrant commands
 vagrant up >> crate new vagrant box
-vagrant provision
+vagrant up --provision >> force the update on first run
 $ vagrant ssh. SSH into virtual machine.
 $ vagrant up. Start virtual machine.
 $ vagrant share. Share your virtual machine to the world via a temporary and unique url.
@@ -61,3 +61,21 @@ cd /var/lib/jenkins/workspace
 TODO
 
 add dependency analyze stage
+
+Run tests
+./mvnw clean install -Punit-tests
+./mvnw clean test -Pintegraion-tests
+
+./mvnw clean install --projects project-api -Punit-tests
+
+ ./mvnw clean verify --projects project-api -Pintegration-tests
+
+ control certain environmental constraints
+ with enforcer
+./mvnw post-clean -Pinfrastructure
+
+Analyze dependencies
+./mvnw org.apache.maven.plugins:maven-dependency-plugin:2.10:analyze
+
+Run Bdd tests
+./mvnw clean install --projects project-bdd-tests -Pbdd-test

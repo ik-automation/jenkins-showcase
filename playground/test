@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# Specifying a full URL works!
+java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin http://updates.jenkins-ci.org/download/plugins/AdaptivePlugin/0.1/AdaptivePlugin.hpi --username admin --password 123456
+
+# Get the update center ourself
+wget -O default.json http://updates.jenkins-ci.org/update-center.json
+
+# remove first and last line javascript wrapper
+
+# Now push it to the update URL
+curl -X POST -H "Accept: application/json" -d @default.json http://localhost:8080/updateCenter/byId/default/postBack --verbose
+
+java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin findbugs --username admin --password 123456
+
+java -jar jenkins-cli.jar -s http://localhost:8080 safe-restart --username admin --password 123456
+
+java -jar jenkins-cli.jar -s http://localhost:8080 reload-configuration --username admin --password 123456
+
+## EXTRAS ##
+java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin parameterized-trigger--username admin --password 123456
+
+java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin conditional-buildstep --username admin --password 123456
+
+
+
+java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin delivery-pipeline-plugin --username admin --password 123456
+java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin blueocean --username admin --password 123456
+
+
+# Update jenkins version
+java -jar jenkins-cli.jar -s http://localhost:8080/ version --username admin --password 123456
+
+
+
+sudo systemctl stop jenkins
+sudo yum update jenkins -yum
+sudo systemctl start jenkins
