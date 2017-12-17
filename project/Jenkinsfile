@@ -1,0 +1,117 @@
+#!groovy
+
+pipeline {
+   agent any
+
+   stages {
+        stage('Pull Resources') {
+            steps {
+              sh "export FOLDER=\$(pwd)"
+              sh '''
+                 echo "Pull local resources from /vagrant/project folder into current folder ${FOLDER}"
+                 cp -a /vagrant/project .
+                 '''
+              sh 'ls -la project'
+            }
+        }
+        stage('Compile Stage') {
+            steps {
+                //dependency analyze,etc
+                sh 'echo Compile Stage'
+                sh 'java -version'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'echo BUILD'
+            }
+        }
+        stage('Unit Tests') {
+            failFast true
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                       sh 'echo UNIT TESTS'
+                    }
+                }
+                stage('Mutation Tests') {
+                    steps {
+                       sh 'echo UNIT TESTS'
+                    }
+                }
+            }
+            post {
+                always {
+                    sh 'echo Unit and Mutation TESTS OK'
+                }
+            }
+        }
+        stage('Integration Tests') {
+            steps {
+                sh 'echo Integration TESTS'
+            }
+            post {
+                always {
+                    sh 'echo Unit TESTS OK'
+                }
+            }
+        }
+        stage('Funtional/BDD Tests') {
+            steps {
+                sh 'echo Funtional/BDD TESTS'
+            }
+            post {
+                always {
+                    sh 'echo Unit TESTS OK'
+                }
+            }
+        }
+        stage('Deploy Local') {
+            steps {
+                sh 'echo DEPLOY ARTIFACT'
+                // command where to find runnin artifact
+                // clear current resoucres
+                // restart docker
+                // deploy to local docker
+
+               sh "export FOLDER=\$(pwd)"
+               sh '''
+                   echo "Clean folder ${FOLDER}/project"
+                   rm -rf project
+                  '''
+               sh 'ls -la'
+            }
+        }
+        stage('Performace tests') {
+            steps {
+                sh 'echo Funtional/BDD TESTS'
+            }
+            post {
+                always {
+                   sh 'echo Performace tests OK'
+                }
+            }
+        }
+        stage('Deploy Sit') {
+            steps {
+                sh 'echo DEPLOY ARTIFACT'
+                // just a playcholder
+            }
+        }
+        stage('Deploy Prod Blue/Green') {
+            steps {
+                sh 'echo DEPLOY ARTIFACT'
+                // just a playcholder
+            }
+        }
+   }
+
+   post {
+      success {
+          echo 'SUCCESSS'
+      }
+      failure {
+          echo 'FAILURE'
+      }
+   }
+}

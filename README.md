@@ -48,3 +48,11 @@ Login to Jenkins
 http://10.0.0.5:8080/login
 use credentials
 admin/123456
+
+
+Info
+underlying OS version
+CentOS Linux release 7.4.1708 (Core)
+
+
+cd /var/lib/jenkins/workspace
