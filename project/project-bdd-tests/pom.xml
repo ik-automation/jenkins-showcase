@@ -23,6 +23,9 @@
         <docker.image.prefix>local</docker.image.prefix>
         <docker.image.vesion>latest</docker.image.vesion>
         <docker.image.name>project-api</docker.image.name>
+
+        <cucumber.options>--plugin pretty --glue lv.ctco.cukesrest.api src/test/resources</cucumber.options>
+        <surefire.fork.count>10</surefire.fork.count>
     </properties>
 
 
@@ -45,23 +48,18 @@
             <version>${cukes.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-core</artifactId>
-            <version>${cukes.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <finalName>project-bdd-tests</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -87,15 +85,16 @@
 
     <profiles>
         <profile>
-            <id>bdd-test</id>
+            <id>bdd-tests</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <cukes.base_uri.host>localhost</cukes.base_uri.host>
                 <docker_app.base_uri.port>8080</docker_app.base_uri.port>
-                <skip.unit.tests>true</skip.unit.tests>
+                <!--<skip.unit.tests>true</skip.unit.tests>-->
                 <skip.integration.tests>false</skip.integration.tests>
+                <!--<failsafe.skip.tests>false</failsafe.skip.tests>-->
             </properties>
             <build>
                 <plugins>
@@ -119,8 +118,22 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <forkcount>${surefire.fork.count}</forkcount>
+                            <reuseFork>false</reuseFork>
+                            <systemProperties>
+                                <cucumber.options>${cucumber.options}</cucumber.options>
+                                <cukes.base_uri>http://${cukes.base_uri.host}:${cukes.base_uri.port}</cukes.base_uri>
+                                <includes>
+                                    <include>**/*CukesTest.java</include>
+                                </includes>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven.failsafe.plugin.version}</version>
                         <configuration>
                             <includes>
                                 <include>**/*CukesTest.java</include>
