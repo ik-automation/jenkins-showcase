@@ -16,14 +16,20 @@ pipeline {
         }
         stage('Compile Stage') {
             steps {
-                //dependency analyze,etc
-                sh 'echo Compile Stage'
                 sh 'java -version'
+                sh '''
+                   cd project
+                   ./mvnw post-clean -Pinfrastructure
+                   ./mvnw clean compile
+                   '''
             }
         }
-        stage('Build') {
+        stage('Analyze Dependencies') {
             steps {
-                sh 'echo BUILD'
+                sh '''
+                   cd project
+                   ./mvnw org.apache.maven.plugins:maven-dependency-plugin:2.10:analyze
+                   '''
             }
         }
         stage('Unit Tests') {
@@ -31,7 +37,10 @@ pipeline {
             parallel {
                 stage('Unit Tests') {
                     steps {
-                        sh 'echo UNIT TESTS'
+                        sh '''
+                           cd project
+                           ./mvnw clean install --projects project-api -Punit-tests
+                           '''
                     }
                 }
                 stage('Mutation Tests') {
@@ -48,7 +57,10 @@ pipeline {
         }
         stage('Integration Tests') {
             steps {
-                sh 'echo Integration TESTS'
+                sh '''
+                   cd project
+                   ./mvnw clean verify --projects project-api -Pintegration-tests
+                   '''
             }
             post {
                 always {
@@ -74,12 +86,12 @@ pipeline {
                 // restart docker
                 // deploy to local docker
 
-                sh "export FOLDER=\$(pwd)"
-                sh '''
-                   echo "Clean folder ${FOLDER}/project"
-                   rm -rf project
-                  '''
-                sh 'ls -la'
+                // sh "export FOLDER=\$(pwd)"
+                // sh '''
+                //    echo "Clean folder ${FOLDER}/project"
+                //    rm -rf project
+                //   '''
+                // sh 'ls -la'
             }
         }
         stage('Performace tests') {
@@ -109,9 +121,22 @@ pipeline {
     post {
         success {
             echo 'SUCCESSS'
+            sh "export FOLDER=\$(pwd)"
+            sh '''
+                echo "Clean folder ${FOLDER}/project"
+                rm -rf project
+               '''
+            sh 'ls -la'
         }
         failure {
             echo 'FAILURE'
+
+            sh "export FOLDER=\$(pwd)"
+            sh '''
+               echo "Clean folder ${FOLDER}/project"
+               rm -rf project
+               '''
+            sh 'ls -la'
         }
     }
 }
