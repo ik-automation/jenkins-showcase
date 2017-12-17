@@ -56,3 +56,8 @@ CentOS Linux release 7.4.1708 (Core)
 
 
 cd /var/lib/jenkins/workspace
+
+
+TODO
+
+add dependency analyze stage

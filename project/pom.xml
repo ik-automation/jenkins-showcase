@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>yakuramori</groupId>
+    <artifactId>jenkins-showcase</artifactId>
+    <version>1.0</version>
+
+    <packaging>pom</packaging>
+
+    <name>Jenkin Showcase Build</name>
+
+    <modules>
+        <module>project-api</module>
+    </modules>
+
+    <properties>
+        <maven.install.skip>true</maven.install.skip>
+        <main.basedir>${basedir}/..</main.basedir>
+        <!--project specific-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.version>1.0</project.version>
+        <!--TODO update to 1.9-->
+        <java.version>1.8</java.version>
+        <!--TODO update to version 5-->
+        <junit.version>4.12</junit.version>
+        <!--spring dependecies-->
+        <spring.boot.version>1.5.9</spring.boot.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
+        <!--logging-->
+        <slf4j.version>1.7.25</slf4j.version>
+        <!--maven pluging-->
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler>3.7.0</maven.compiler>
+        <maven.surefire.plugin.version>2.20.1</maven.surefire.plugin.version>
+        <maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
+        <maven.failsafe.plugin.version>2.18.1</maven.failsafe.plugin.version>
+        <maven.enforcer.version>3.0.0-M1</maven.enforcer.version>
+        <maven.build.helper.version>3.0.0</maven.build.helper.version>
+        <maven.exec.version>1.6.0</maven.exec.version>
+        <maven.install.version>2.5.1</maven.install.version>
+    </properties>
+
+    <distributionManagement>
+        <!--set extra repositories-->
+    </distributionManagement>
+
+    <profiles>
+        <!-- <profile>
+            <id>integration-test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile> -->
+    </profiles>
+
+    <dependencyManagement>
+       <!-- No shared dependencies -->
+    </dependencyManagement>
+
+    <dependencies>
+        <!--No need of dependencies here-->
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                                <goal>build-info</goal>
+                            </goals>
+                            <configuration>
+                                <additionalProperties>
+                                    <encoding.source>UTF-8</encoding.source>
+                                    <encoding.reporting>UTF-8</encoding.reporting>
+                                    <java.source>${maven.compiler.source}</java.source>
+                                    <java.target>${maven.compiler.target}</java.target>
+                                </additionalProperties>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                    <configuration>
+                        <runOrder>random</runOrder>
+                        <!--plugin is flaky, run at least of time every failing test-->
+                        <rerunFailingTestsCount>1</rerunFailingTestsCount>
+                        <systemPropertyVariables>
+                            <java.security.egd>file:/dev/./urandom</java.security.egd>
+                            <java.awt.headless>true</java.awt.headless>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven.failsafe.plugin.version}</version>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <spring.main.banner-mode>off</spring.main.banner-mode>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven.enforcer.version}</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-rules</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <bannedPlugins>
+                                        <!-- will only display a warning but does not fail the build. -->
+                                        <level>WARN</level>
+                                        <excludes>
+                                            <exclude>org.apache.maven.plugins:maven-verifier-plugin
+                                            </exclude>
+                                        </excludes>
+                                        <message>Please consider using the maven-invoker-plugin
+                                            (http://maven.apache.org/plugins/maven-invoker-plugin/)!
+                                        </message>
+                                    </bannedPlugins>
+                                    <bannedDependencies>
+                                    <!-- ban dependencies -->
+                                    </bannedDependencies>
+                                    <requireMavenVersion>
+                                        <version>3.0.0</version>
+                                        <message>Please update maven version</message>
+                                    </requireMavenVersion>
+                                    <requireJavaVersion>
+                                        <version>1.8</version>
+                                        <message>Please update java version</message>
+                                    </requireJavaVersion>
+                                </rules>
+                                <fail>true</fail>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven.install.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
