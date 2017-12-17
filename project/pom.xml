@@ -49,15 +49,6 @@
         <!--set extra repositories-->
     </distributionManagement>
 
-    <profiles>
-        <!-- <profile>
-            <id>integration-test</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile> -->
-    </profiles>
-
     <dependencyManagement>
         <!-- No shared dependencies -->
     </dependencyManagement>
@@ -72,6 +63,7 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
                     <executions>
                         <execution>
                             <goals>
@@ -88,30 +80,6 @@
                             </configuration>
                         </execution>
                     </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven.surefire.plugin.version}</version>
-                    <configuration>
-                        <runOrder>random</runOrder>
-                        <!--plugin is flaky, run at least of time every failing test-->
-                        <rerunFailingTestsCount>1</rerunFailingTestsCount>
-                        <systemPropertyVariables>
-                            <java.security.egd>file:/dev/./urandom</java.security.egd>
-                            <java.awt.headless>true</java.awt.headless>
-                        </systemPropertyVariables>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>${maven.failsafe.plugin.version}</version>
-                    <configuration>
-                        <systemPropertyVariables>
-                            <spring.main.banner-mode>off</spring.main.banner-mode>
-                        </systemPropertyVariables>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -175,14 +143,12 @@
                 <artifactId>maven-enforcer-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
+
+
 
 </project>

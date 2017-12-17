@@ -115,8 +115,98 @@
     </build>
 
     <profiles>
-        <!-- unit testing -->
-        <!-- integration testing -->
-        <!-- consumer driven contract testing -->
+        <profile>
+            <id>unit-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>unit-tests</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <runOrder>random</runOrder>
+                            <!--plugin is flaky, run at least of time every failing test-->
+                            <rerunFailingTestsCount>1</rerunFailingTestsCount>
+                            <!--<excludes>-->
+                            <!--<exclude>**/*IT.java</exclude>-->
+                            <!--</excludes>-->
+                            <includes>
+                                <include>**/*Test.java</include>
+                            </includes>
+                            <systemPropertyVariables>
+                                <java.security.egd>file:/dev/./urandom</java.security.egd>
+                                <java.awt.headless>true</java.awt.headless>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>integration-tests</id>
+            <properties>
+                <skip.unit.tests>false</skip.unit.tests>
+                <skip.integration.tests>false</skip.integration.tests>
+                <!--<surefire.skip.tests>true</surefire.skip.tests>-->
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.plugin.version}</version>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven.failsafe.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>integration-tests</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*Test.java</exclude>
+                            </excludes>
+                            <systemPropertyVariables>
+                                <spring.main.banner-mode>off</spring.main.banner-mode>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>consumer-contracts</id>
+            <properties>
+                <failsafe.skip.tests>true</failsafe.skip.tests>
+            </properties>
+        </profile>
+        <profile>
+            <id>dependency-validation</id>
+            <properties>
+                <failsafe.skip.tests>true</failsafe.skip.tests>
+            </properties>
+        </profile>
     </profiles>
 </project>
