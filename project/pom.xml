@@ -83,46 +83,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>${maven.enforcer.version}</version>
-                    <executions>
-                        <execution>
-                            <id>enforce-rules</id>
-                            <goals>
-                                <goal>enforce</goal>
-                            </goals>
-                            <configuration>
-                                <rules>
-                                    <bannedPlugins>
-                                        <!-- will only display a warning but does not fail the build. -->
-                                        <level>WARN</level>
-                                        <excludes>
-                                            <exclude>org.apache.maven.plugins:maven-verifier-plugin
-                                            </exclude>
-                                        </excludes>
-                                        <message>Please consider using the maven-invoker-plugin
-                                            (http://maven.apache.org/plugins/maven-invoker-plugin/)!
-                                        </message>
-                                    </bannedPlugins>
-                                    <bannedDependencies>
-                                        <!-- ban dependencies -->
-                                    </bannedDependencies>
-                                    <requireMavenVersion>
-                                        <version>3.0.0</version>
-                                        <message>Please update maven version</message>
-                                    </requireMavenVersion>
-                                    <requireJavaVersion>
-                                        <version>1.8</version>
-                                        <message>Please update java version</message>
-                                    </requireJavaVersion>
-                                </rules>
-                                <fail>true</fail>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven.compiler}</version>
                     <configuration>
@@ -149,6 +109,79 @@
         </plugins>
     </build>
 
-
+ <profiles>
+     <profile>
+         <id>infrastructure</id>
+         <build>
+             <plugins>
+                 <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-enforcer-plugin</artifactId>
+                     <version>${maven.enforcer.version}</version>
+                     <executions>
+                         <execution>
+                             <id>enforce-rules</id>
+                             <phase>post-clean</phase>
+                             <goals>
+                                 <goal>display-info</goal>
+                                 <goal>enforce</goal>
+                             </goals>
+                             <configuration>
+                                 <rules>
+                                     <bannedPlugins>
+                                         <!-- will only display a warning but does not fail the build. -->
+                                         <level>WARN</level>
+                                         <excludes>
+                                             <exclude>org.apache.maven.plugins:maven-verifier-plugin
+                                             </exclude>
+                                         </excludes>
+                                         <message>Please consider using the maven-invoker-plugin
+                                             (http://maven.apache.org/plugins/maven-invoker-plugin/)!
+                                         </message>
+                                     </bannedPlugins>
+                                     <bannedDependencies>
+                                         <!--TODO exclude-->
+                                         <!--<excludes>-->
+                                         <!--<exclude>commons-logging:*:*</exclude>-->
+                                         <!--</excludes>-->
+                                         <!--<searchTransitive>false</searchTransitive>-->
+                                     </bannedDependencies>
+                                     <requireMavenVersion>
+                                         <version>3.0.0</version>
+                                         <message>Please update maven version</message>
+                                     </requireMavenVersion>
+                                     <requireJavaVersion>
+                                         <version>1.8</version>
+                                         <message>Please update java version</message>
+                                     </requireJavaVersion>
+                                 </rules>
+                                 <fail>true</fail>
+                             </configuration>
+                         </execution>
+                     </executions>
+                 </plugin>
+             </plugins>
+         </build>
+     </profile>
+     <profile>
+         <id>dependency</id>
+         <build>
+             <plugins>
+                 <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-dependency-plugin</artifactId>
+                     <version>${maven.dependency.plugin.version}</version>
+                     <configuration>
+                         <ignoreNonCompile>true</ignoreNonCompile>
+                         <failOnWarning>true</failOnWarning>
+                         <ignoredUnusedDeclaredDependencies>
+                             <declaredDependency>org.slf4j:slf4j-api:jar</declaredDependency>
+                         </ignoredUnusedDeclaredDependencies>
+                     </configuration>
+                 </plugin>
+             </plugins>
+         </build>
+     </profile>
+ </profiles>
 
 </project>
