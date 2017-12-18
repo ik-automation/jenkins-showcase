@@ -37,6 +37,7 @@ Vagrant.configure(2) do |config|
     jenkins.vm.provision 'shell', path: 'provision/helper.sh', privileged: true
     jenkins.vm.provision 'shell', path: 'provision/jennkins.update.sh', privileged: false
     jenkins.vm.provision 'shell', path: 'provision/plugins.install.sh', privileged: false
+    jenkins.vm.provision 'shell', path: 'provision/java.install.sh', privileged: false
   end
 
 
